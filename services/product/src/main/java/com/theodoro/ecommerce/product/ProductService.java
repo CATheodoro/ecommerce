@@ -32,14 +32,18 @@ public class ProductService {
     public List<ProductPurchaseResponse> purchaseProducts(@Valid List<ProductPurchaseRequest> requests) {
         List<Integer> productIds = requests.stream().map(ProductPurchaseRequest::productId).toList();
         List<Product> storedProducts = productRepository.findAllByIdInOrderById(productIds);
+
         if(productIds.size() != storedProducts.size()){
             throw new ProductPurchaseException("One or more products does not exist");
         }
+
         List<ProductPurchaseRequest> storedRequests = requests.stream().sorted(Comparator.comparing(ProductPurchaseRequest::productId)).toList();
         List<ProductPurchaseResponse> productPurchaseResponses = new ArrayList<>();
+
         for (int i = 0; i<storedProducts.size(); i++){
             Product product = storedProducts.get(i);
             ProductPurchaseRequest productPurchaseRequest = storedRequests.get(i);
+
             if(product.getAvailableQuantity() < productPurchaseRequest.quantity()){
                 throw new ProductPurchaseException("Insufficient stock for product with ID:: " + productPurchaseRequest.quantity());
             }
