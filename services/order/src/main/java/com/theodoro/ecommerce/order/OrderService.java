@@ -7,6 +7,8 @@ import com.theodoro.ecommerce.kafka.OrderConfirmation;
 import com.theodoro.ecommerce.kafka.OrderProducer;
 import com.theodoro.ecommerce.orderline.OrderLineRequest;
 import com.theodoro.ecommerce.orderline.OrderLineService;
+import com.theodoro.ecommerce.payment.PaymentClient;
+import com.theodoro.ecommerce.payment.PaymentRequest;
 import com.theodoro.ecommerce.product.ProductClient;
 import com.theodoro.ecommerce.product.PurchaseRequest;
 import com.theodoro.ecommerce.product.PurchaseResponse;
@@ -27,6 +29,7 @@ public class OrderService {
     private final ProductClient productClient;
     private final OrderLineService orderLineService;
     private final OrderProducer orderProducer;
+    private final PaymentClient paymentClient;
 
     public Integer createOrder(@Valid OrderRequest request) {
         CustomerResponse customer = this.customerClient.findCustomerById(request.customerId())
@@ -46,6 +49,15 @@ public class OrderService {
                     )
             );
         }
+
+        PaymentRequest paymentRequest = new PaymentRequest(
+                request.amount(),
+                request.paymentMethod(),
+                order.getId(),
+                order.getReference(),
+                customer
+        );
+        paymentClient.requestOrderPayment(paymentRequest);
 
         orderProducer.sendOrderConfirmation(
                 new OrderConfirmation(
