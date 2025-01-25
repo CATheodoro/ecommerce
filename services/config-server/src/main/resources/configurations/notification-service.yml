@@ -1,3 +1,6 @@
+serve:
+  port: 8040
+
 spring:
   data:
     mongodb:
@@ -12,11 +15,11 @@ spring:
       bootstrap-servers: localhost:9092
       group-id: paymentGroup, orderGroup
       auto-offset-rest: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
-      value-deserializer: org.springframework.kafka.support.serializer.jsonSerializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: '*'
-        spring.json.type.mapping: orderConfirmation:com.theodoro.ecommerce.kafka.OrderConfirmation,paymentConfirmation:com.theodoro.ecommerce.notification.PaymentNotificationRequest
+        spring.json.type.mapping: orderConfirmation:com.theodoro.ecommerce.kafka.order.OrderConfirmation,paymentConfirmation:com.theodoro.ecommerce.kafka.payment.PaymentConfirmation
   mail:
     host: localhost
     port: 1025
@@ -32,6 +35,3 @@ spring:
         connectiontimeout: 5000
         timeout: 3000
         writetimeout: 5000
-
-serve:
-  port: 8040
