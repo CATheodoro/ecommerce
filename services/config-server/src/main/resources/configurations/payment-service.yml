@@ -18,5 +18,8 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: paymentConfirmation:com.theodoro.ecommerce.kafka.payment.PaymentConfirmation
+        spring.json.type.mapping: paymentConfirmation:com.theodoro.ecommerce.notification.PaymentNotificationRequest
 
+application:
+  config:
+    product-url: http://localhost:8222/api/v1/products

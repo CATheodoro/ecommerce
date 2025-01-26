@@ -14,7 +14,7 @@ public class OrderLine {
     @Id
     @GeneratedValue
     private Integer id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id")
     private Order order;
     private Integer productId;
