@@ -20,8 +20,6 @@ spring:
       properties:
         spring.json.type.mapping: orderConfirmation:com.theodoro.ecommerce.kafka.OrderConfirmation
 
-
-
 application:
   config:
     customer-url: http://localhost:8222/api/v1/customers

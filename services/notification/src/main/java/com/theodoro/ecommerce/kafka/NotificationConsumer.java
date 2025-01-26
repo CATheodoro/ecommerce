@@ -8,6 +8,7 @@ import com.theodoro.ecommerce.notification.NotificationRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,16 @@ import java.time.LocalDateTime;
 
 import static com.theodoro.ecommerce.notification.NotificationType.ORDER_CONFIRMATION;
 import static com.theodoro.ecommerce.notification.NotificationType.PAYMENT_CONFIRMATION;
+import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationConsumer {
 
+    @Autowired
     private final NotificationRepository notificationRepository;
+    @Autowired
     private final EmailService emailService;
 
     @KafkaListener(topics = "payment-topic")
@@ -47,7 +51,7 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "order-topic")
     public void consumeOrderConfirmationNotification(OrderConfirmation orderConfirmation) throws MessagingException {
-        log.info(String.format("Consuming the message from order-topic:: %s", orderConfirmation));
+        log.info(format("Consuming the message from order-topic Topic:: %s", orderConfirmation));
         notificationRepository.save(
                 Notification.builder()
                         .type(ORDER_CONFIRMATION)
